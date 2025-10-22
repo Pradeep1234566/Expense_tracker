@@ -1,3 +1,4 @@
+import 'package:expense_tracker/pages/settings_page.dart';
 import 'package:expense_tracker/widget/button.dart';
 import 'package:expense_tracker/widget/transaction_tile.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,10 @@ class HomePage extends StatelessWidget {
               print('Stats tapped');
               break;
             case 2:
-              
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SettingsPage()));
               break;
           }
         },
