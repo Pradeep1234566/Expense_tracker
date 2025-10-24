@@ -1,3 +1,4 @@
+import 'package:expense_tracker/pages/Common_page.dart';
 import 'package:expense_tracker/pages/settings_page.dart';
 import 'package:expense_tracker/widget/button.dart';
 import 'package:expense_tracker/widget/transaction_tile.dart';
@@ -92,13 +93,24 @@ class HomePage extends StatelessWidget {
               CustomButton(
                   label: 'Add Income',
                   icon: Icons.add,
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>  CommonPage(appbartitle: 'Income', title: 'Income',))
+                    );
+                  },
                   backgroundColor: Colors.green,
                   foregroundColor: Colors.white),
               CustomButton(
                   label: 'Add Expense',
                   icon: Icons.remove,
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CommonPage(appbartitle: 'Expense', title: 'Expense',)));
+                  },
                   backgroundColor: Colors.redAccent,
                   foregroundColor: Colors.white)
             ],
