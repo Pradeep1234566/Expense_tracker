@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class CommonPage extends StatelessWidget {
   String appbartitle;
   String title;
@@ -13,9 +14,12 @@ class CommonPage extends StatelessWidget {
           title: Text(appbartitle),
         ),
         body: Column(
+          
           children: [
             TextField(
+              
                 decoration: InputDecoration(
+
               hintText: 'Enter $title type',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
