@@ -1,4 +1,3 @@
-
 import 'package:expense_tracker/pages/common_page.dart';
 import 'package:expense_tracker/pages/settings_page.dart';
 import 'package:expense_tracker/pages/stats_page.dart';
@@ -23,9 +22,8 @@ class _HomePageState extends State<HomePage> {
   double get currentBalance {
     double balance = 0.0;
     for (var transaction in transactions) {
-      balance += transaction.isIncome
-          ? transaction.amount
-          : -transaction.amount;
+      balance +=
+          transaction.isIncome ? transaction.amount : -transaction.amount;
     }
     return balance;
   }
@@ -89,7 +87,7 @@ class _HomePageState extends State<HomePage> {
                     style: TextStyle(color: Colors.white70, fontSize: 16)),
                 const SizedBox(height: 8),
                 Text(
-                  '\$${currentBalance.toStringAsFixed(2)}',
+                  '\₹${currentBalance.toStringAsFixed(2)}',
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 32,
@@ -156,7 +154,7 @@ class _HomePageState extends State<HomePage> {
             (t) => TransactionTile(
               title: t.category,
               amount:
-                  '${t.isIncome ? '+' : '-'}\$${t.amount.toStringAsFixed(2)}',
+                  '${t.isIncome ? '+' : '-'}\₹${t.amount.toStringAsFixed(2)}',
               date: DateFormat('MMMM yyyy').format(t.date),
               icon: t.isIncome ? Icons.arrow_upward : Icons.arrow_downward,
               color: t.isIncome ? Colors.green : Colors.red,
