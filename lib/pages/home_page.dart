@@ -1,25 +1,37 @@
-// create this file
+
+import 'package:expense_tracker/pages/common_page.dart';
+import 'package:expense_tracker/pages/settings_page.dart';
 import 'package:expense_tracker/pages/stats_page.dart';
 import 'package:expense_tracker/pages/transaction_page.dart';
-import 'package:flutter/material.dart';
 import 'package:expense_tracker/widget/button.dart';
 import 'package:expense_tracker/widget/transaction_tile.dart';
-import 'package:expense_tracker/pages/Common_page.dart';
-import 'package:expense_tracker/pages/settings_page.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // Dummy data
-    final List<TransactionModel> transactions = [
-      TransactionModel(category: 'Electricity', amount: 75, isIncome: false),
-      TransactionModel(category: 'Groceries', amount: 50, isIncome: false),
-      TransactionModel(category: 'Salary', amount: 2000, isIncome: true),
-      TransactionModel(category: 'Coffee', amount: 5, isIncome: false),
-    ];
+  State<HomePage> createState() => _HomePageState();
+}
 
+class _HomePageState extends State<HomePage> {
+  // Initialize with an empty list instead of dummy data
+  final List<TransactionModel> transactions = [];
+
+  // Calculate current balance
+  double get currentBalance {
+    double balance = 0.0;
+    for (var transaction in transactions) {
+      balance += transaction.isIncome
+          ? transaction.amount
+          : -transaction.amount;
+    }
+    return balance;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       bottomNavigationBar: BottomNavigationBar(
@@ -71,16 +83,18 @@ class HomePage extends StatelessWidget {
               color: Colors.blueGrey[800],
               borderRadius: BorderRadius.circular(16),
             ),
-            child: const Column(
+            child: Column(
               children: [
-                Text('Current Balance',
+                const Text('Current Balance',
                     style: TextStyle(color: Colors.white70, fontSize: 16)),
-                SizedBox(height: 8),
-                Text('\$1,200.50',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                Text(
+                  '\$${currentBalance.toStringAsFixed(2)}',
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold),
+                ),
               ],
             ),
           ),
@@ -91,8 +105,8 @@ class HomePage extends StatelessWidget {
               CustomButton(
                 label: 'Add Income',
                 icon: Icons.add,
-                onPressed: () {
-                  Navigator.push(
+                onPressed: () async {
+                  final result = await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => CommonPage(
@@ -101,6 +115,11 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                   );
+                  if (result != null && result is TransactionModel) {
+                    setState(() {
+                      transactions.add(result);
+                    });
+                  }
                 },
                 backgroundColor: Colors.green,
                 foregroundColor: Colors.white,
@@ -108,8 +127,8 @@ class HomePage extends StatelessWidget {
               CustomButton(
                 label: 'Add Expense',
                 icon: Icons.remove,
-                onPressed: () {
-                  Navigator.push(
+                onPressed: () async {
+                  final result = await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => CommonPage(
@@ -118,6 +137,11 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                   );
+                  if (result != null && result is TransactionModel) {
+                    setState(() {
+                      transactions.add(result);
+                    });
+                  }
                 },
                 backgroundColor: Colors.redAccent,
                 foregroundColor: Colors.white,
@@ -133,7 +157,7 @@ class HomePage extends StatelessWidget {
               title: t.category,
               amount:
                   '${t.isIncome ? '+' : '-'}\$${t.amount.toStringAsFixed(2)}',
-              date: 'April 2024',
+              date: DateFormat('MMMM yyyy').format(t.date),
               icon: t.isIncome ? Icons.arrow_upward : Icons.arrow_downward,
               color: t.isIncome ? Colors.green : Colors.red,
             ),
