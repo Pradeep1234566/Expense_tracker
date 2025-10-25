@@ -33,9 +33,40 @@ A cross-platform Flutter application for tracking expenses and income, designed 
 - Android Studio or VS Code
 - Android/iOS emulator or physical device
 
+###Project Structure
+expense_tracker/
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  intl: ^0.19.0
 ### Installation
 
-1. **Clone the Repository**:
+ **Clone the Repository**:
    ```bash
    git clone https://github.com/Pradeep1234566/expense_tracker.git
    cd expense_tracker
+   flutter pub get
+   flutter run
+
+**Dependencies**
+├── lib/
+│   ├── models/
+│   │   └── transaction_model.dart  # Transaction data model with Hive adapter
+│   ├── pages/
+│   │   ├── home_page.dart          # Main page for balance and transactions
+│   │   ├── stats_page.dart         # Expense visualization
+│   │   ├── settings_page.dart      # Currency and data reset settings
+│   │   └── common_page.dart        # Transaction input page
+│   ├── widget/
+│   │   ├── button.dart             # Custom button widget
+│   │   └── transaction_tile.dart   # Transaction display widget
+│   └── main.dart                   # App entry point
+├── screenshots/                    # Screenshots for README
+└── pubspec.yaml                    # Dependencies
+
+'''
+
