@@ -1,13 +1,25 @@
-class TransactionModel {
-  final String category;
-  final double amount;
-  final bool isIncome;
-  final DateTime date;
+import 'package:hive/hive.dart';
+
+part 'transaction_page.g.dart';
+
+@HiveType(typeId: 0)
+class TransactionModel extends HiveObject {
+  @HiveField(0)
+  String category;
+
+  @HiveField(1)
+  double amount;
+
+  @HiveField(2)
+  DateTime date;
+
+  @HiveField(3)
+  bool isIncome;
 
   TransactionModel({
     required this.category,
     required this.amount,
-    required this.isIncome,
     required this.date,
+    required this.isIncome,
   });
 }

@@ -6,6 +6,7 @@ import 'package:expense_tracker/widget/button.dart';
 import 'package:expense_tracker/widget/transaction_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,10 +16,28 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // Initialize with an empty list instead of dummy data
-  final List<TransactionModel> transactions = [];
+  late Box<TransactionModel> transactionsBox;
+  List<TransactionModel> transactions = [];
 
-  // Calculate current balance
+  @override
+  void initState() {
+    super.initState();
+    // open the box if not already opened
+    transactionsBox = Hive.box<TransactionModel>('transactionsBox');
+    loadTransactions();
+  }
+
+  void loadTransactions() {
+    setState(() {
+      transactions = transactionsBox.values.toList();
+    });
+  }
+
+  void addTransaction(TransactionModel transaction) {
+    transactionsBox.add(transaction);
+    loadTransactions();
+  }
+
   double get currentBalance {
     double balance = 0.0;
     for (var transaction in transactions) {
@@ -83,15 +102,18 @@ class _HomePageState extends State<HomePage> {
             ),
             child: Column(
               children: [
-                const Text('Current Balance',
-                    style: TextStyle(color: Colors.white70, fontSize: 16)),
+                const Text(
+                  'Current Balance',
+                  style: TextStyle(color: Colors.white70, fontSize: 16),
+                ),
                 const SizedBox(height: 8),
                 Text(
                   '\₹${currentBalance.toStringAsFixed(2)}',
                   style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold),
+                    color: Colors.white,
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
@@ -114,9 +136,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   );
                   if (result != null && result is TransactionModel) {
-                    setState(() {
-                      transactions.add(result);
-                    });
+                    addTransaction(result);
                   }
                 },
                 backgroundColor: Colors.green,
@@ -136,9 +156,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   );
                   if (result != null && result is TransactionModel) {
-                    setState(() {
-                      transactions.add(result);
-                    });
+                    addTransaction(result);
                   }
                 },
                 backgroundColor: Colors.redAccent,
@@ -147,19 +165,29 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           const SizedBox(height: 30),
-          const Text('Recent Transactions',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-          const SizedBox(height: 10),
-          ...transactions.map(
-            (t) => TransactionTile(
-              title: t.category,
-              amount:
-                  '${t.isIncome ? '+' : '-'}\₹${t.amount.toStringAsFixed(2)}',
-              date: DateFormat('MMMM yyyy').format(t.date),
-              icon: t.isIncome ? Icons.arrow_upward : Icons.arrow_downward,
-              color: t.isIncome ? Colors.green : Colors.red,
-            ),
+          const Text(
+            'Recent Transactions',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           ),
+          const SizedBox(height: 10),
+          if (transactions.isEmpty)
+            const Center(
+              child: Text(
+                'No transactions yet!',
+                style: TextStyle(color: Colors.black54, fontSize: 16),
+              ),
+            )
+          else
+            ...transactions.map(
+              (t) => TransactionTile(
+                title: t.category,
+                amount:
+                    '${t.isIncome ? '+' : '-'}\₹${t.amount.toStringAsFixed(2)}',
+                date: DateFormat('MMMM yyyy').format(t.date),
+                icon: t.isIncome ? Icons.arrow_upward : Icons.arrow_downward,
+                color: t.isIncome ? Colors.green : Colors.red,
+              ),
+            ),
         ],
       ),
     );
