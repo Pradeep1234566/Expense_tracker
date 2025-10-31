@@ -20,8 +20,8 @@ A cross-platform Flutter application for tracking expenses and income, designed 
 
 ## Screenshots
 
-![Home Page](screenshots/home_page.png)
-![Stats Page](screenshots/stats_page.png)
+![Home Page](screenshots/home_page.jpg)
+![Stats Page](screenshots/stats_page.jpg)
 
 
 ## Getting Started
